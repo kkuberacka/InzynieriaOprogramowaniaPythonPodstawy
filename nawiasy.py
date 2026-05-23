@@ -31,9 +31,25 @@ def check_parentheses(s: str) -> bool:
         bool: True jeśli nawiasy są poprawne, False w przeciwnym wypadku.
     """
     ### TUTAJ PODAJ ROZWIĄZANIE ZADANIA
+    stos = []
+
+
+    for znak in s:
+        if znak == '(':
+
+            stos.append(znak)
+        elif znak == ')':
+
+            if not stos:
+                return False
+
+            stos.pop()
+
+
+    return len(stos) == 0
 
     ### return False - powinno być zmienione i zwrócić prawdziwy wynik (zgodny z oczekiwaniami)
-    return False
+
 
 # Przykładowe wywołanie:
 if __name__ == "__main__":
@@ -42,7 +58,9 @@ if __name__ == "__main__":
         "I told ( that its not ( yet ) done ). (42)",
         ":-)",
         "Czesc (o kurcze, chyba niechcacy zamkne ten nawias dwa razy))",
-        "())(("
+        "())((",
+        "(ok)",
+        "((nie ok)"
     ]
     for example in examples:
         print(f"{example} -> {check_parentheses(example)}")

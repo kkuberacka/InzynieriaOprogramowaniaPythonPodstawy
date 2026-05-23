@@ -32,25 +32,59 @@ Wymagania:
 - Obliczenie liczby wystąpień danego wyrazu w każdym dokumencie.
 - Dla każdego zapytania, zwrócenie posortowanej listy indeksów dokumentów.
 """
+def clean_and_split(text: str) -> list[str]:
+    """Funkcja pomocnicza usuwająca interpunkcję i dzieląca tekst na słowa."""
 
+    cleaned = "".join(c.lower() if c.isalnum() or c.isspace() else " " for c in text)
+
+    return cleaned.split()
 
 def index_documents(documents: list[str], queries: list[str]) -> list[list[int]]:
     """
     Przetwarza dokumenty i zapytania, zwracając listy indeksów dokumentów,
     w których występuje zapytanie, posortowane według częstości wystąpienia
     danego wyrazu (malejąco), a w przypadku równych częstości - malejąco wg numeru dokumentu.
-
-    Args:
-        documents (list[str]): Lista dokumentów (każdy dokument to ciąg znaków).
-        queries (list[str]): Lista zapytań (każdy zapytanie to pojedynczy wyraz).
-
-    Returns:
-        list[list[int]]: Lista wyników dla kolejnych zapytań.
     """
-    ### TUTAJ PODAJ ROZWIĄZANIE ZADANIA
+    results = []
+
+    doc_word_counts = []
+    for doc in documents:
+        words = clean_and_split(doc)
+        counts = {}
+        for word in words:
+            counts[word] = counts.get(word, 0) + 1
+        doc_word_counts.append(counts)
+
+
+    for query in queries:
+        query_lower = query.lower().strip()
+        matched_docs = []
+
+
+        for doc_id, counts in enumerate(doc_word_counts):
+            if query_lower in counts:
+                frequency = counts[query_lower]
+                matched_docs.append((doc_id, frequency))
+
+
+        if not matched_docs:
+            results.append([])
+            continue
+
+
+        matched_docs.sort(key=lambda x: (-x[1], x[0]))
+
+
+        sorted_ids = [doc_id for doc_id, freq in matched_docs]
+        results.append(sorted_ids)
+
+    return results
+
+
+
 
     ### return [[]] - powinno być zmienione i zwrócić prawdziwy wynik (zgodny z oczekiwaniami)
-    return [[]]
+
 
 
 # Przykładowe wywołanie:
